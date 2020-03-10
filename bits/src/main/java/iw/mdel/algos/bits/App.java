@@ -30,14 +30,14 @@ public class App {
     return x & (x - 1);
   }
 
+  // 01011000 => 00001000
+  public static int isolateRightmost1Bit(int x) {
+    return x & ~(x - 1);
+  }
+
   // 10100111 => 10101111
   public static int setRightmost0Bit(int x) {
     return x | (x + 1);
-  }
-
-  // 01011000 => 00001000
-  public static int isolateRightmost1Bit(int x) {
-    return x & (~x + 1); // two's complement
   }
 
   // 01011001 => 00000010
@@ -89,7 +89,6 @@ public class App {
   }
 
   /**
-   *
    * @param a - merge if mask is 0
    * @param b - merge if mask is 1
    * @param m - mask, 1 means use b, 0 means use a
@@ -97,5 +96,23 @@ public class App {
    */
   public static int mergeBasedOnMask(int a, int b, int m) {
     return a ^ ((a ^ b) & m);
+  }
+
+  public static short parityBruteForce(long x) {
+    short result = 0;
+    while (x != 0) {
+      result ^= (x & 1);
+      x >>>= 1;
+    }
+    return result;
+  }
+
+  public static short parityNoShift(long x) {
+    short result = 0;
+    while (x != 0) {
+      result ^= 1;
+      x &= x - 1;
+    }
+    return result;
   }
 }

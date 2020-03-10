@@ -126,4 +126,18 @@ public class AppTest {
   void testMergeBasedOnMask() {
     assertEquals(0b10000101, App.mergeBasedOnMask(0b10001010, 0b01110101, 0b00001111));
   }
+
+  @DisplayName("Test parityBruteForce()")
+  @Test
+  void testParityBruteForce() {
+    assertEquals(1, App.parityBruteForce(0b00001000));
+    assertEquals(0, App.parityBruteForce(0b00001001));
+  }
+
+  @DisplayName("Test parityNoShift()")
+  @Test
+  void testParityNoShift() {
+    assertEquals(1, App.parityNoShift(0b00001000));
+    assertEquals(0, App.parityNoShift(0b00001001));
+  }
 }
