@@ -3,6 +3,7 @@ package iw.mdel.algos.bits;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Find parity of a really large (64-bit) number.
@@ -20,18 +21,15 @@ public class ParityOfLargeNumber {
   final static int BIT_MASK = 0xFFFF; // to force outcome to 16 bits
   final static int MASK_SIZE = 16; // to shift large number by 16 bits
 
-  // (16-bit number, associated parity)
+  // 16-bit parity cache
   private static Map<Short, Short> parityCache = new HashMap<>();
 
   public static void main(String[] args) {
     long input = new Random().nextLong();
-    if (input < 0) {
-      System.out.println("Input: " + Long.toBinaryString((1 << 66) | input).substring(1));
-    } else {
-
-    }
-    System.out.println("Input:  " + Long.toBinaryString(input));
-    System.out.println("Parity: " + ParityOfLargeNumber.solution(input));
+    System.out.printf("Input: %d, %s\n\n",
+        input,
+        StringUtils.leftPad(Long.toBinaryString(input),64, '0'));
+    System.out.printf("\nParity: %d\n", ParityOfLargeNumber.solution(input));
   }
 
   /**
@@ -40,8 +38,8 @@ public class ParityOfLargeNumber {
    * @return parity
    */
   public static short solution(long l) {
-    if (loadLookup().size() == 0) { // build parity lookup map once
-      loadLookup();
+    if (createParityCache().size() == 0) { // build parity lookup map once
+      createParityCache();
     }
     short b3 = (short) (l >>> (MASK_SIZE * 3) & BIT_MASK);
     short b2 = (short) (l >>> (MASK_SIZE * 2) & BIT_MASK);
@@ -59,10 +57,9 @@ public class ParityOfLargeNumber {
         parityCache.get(b0));
   }
 
-  private static Map<Short, Short> loadLookup() {
+  private static Map<Short, Short> createParityCache() {
     short s = Short.MIN_VALUE;
     for (int i = 0; i <= Math.abs(Short.MIN_VALUE) + Short.MAX_VALUE; i++) {
-      //System.out.println(s + ": " + Integer.toBinaryString(s & 0xFFFF));
       parityCache.put(s, getParity(s));
       s++;
     }
@@ -79,7 +76,9 @@ public class ParityOfLargeNumber {
   }
 
   private static void printResult(short b) {
-    System.out.printf("Parity of: %6d in %16s is %d\n", b, Integer.toBinaryString(b & 0xFFFF), parityCache
-        .get(b));
+    System.out.printf("Parity of: %6d in %s is %d\n",
+        b,
+        StringUtils.leftPad(Integer.toBinaryString(b & 0xFFFF), 16, '0'),
+        parityCache.get(b));
   }
 }
